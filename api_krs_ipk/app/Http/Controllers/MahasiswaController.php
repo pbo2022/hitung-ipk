@@ -105,7 +105,7 @@ class MahasiswaController extends Controller
         $totalSKS = 0;
 
         foreach ($krsRecords as $record) {
-            $totalNilai += $record->ips * $record->semester;  // Asumsi jumlah SKS per semester
+            $totalNilai += $record->ips * $record->semester;
             $totalSKS += $record->semester;
         }
 
