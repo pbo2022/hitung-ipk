@@ -6,6 +6,8 @@ use App\Models\KRS;
 use App\Models\IPK;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
+
 class MahasiswaController extends Controller
 {
     /**
@@ -91,12 +93,18 @@ class MahasiswaController extends Controller
      */
     private function calculateIPK($nim)
     {
-        $ipkRecords = IPK::where('nim', $nim)->get();
+        // $krsRecords = IPK::where('nim', $nim)->get();
+        $krsRecords = DB::table('tb_krs')
+        ->join('tb_mhs', 'tb_krs.nim', '=', 'tb_mhs.nim')
+        ->join('tb_mk', 'tb_krs.id_mk', '=', 'tb_mk.id_mk')
+        ->where('tb_krs.nim', $nim)
+        ->select('tb_krs.nilai', 'tb_mk.sks', 'tb_mhs.ips', 'tb_krs.semester')
+        ->get();
 
         $totalNilai = 0;
         $totalSKS = 0;
 
-        foreach ($ipkRecords as $record) {
+        foreach ($krsRecords as $record) {
             $totalNilai += $record->ips * $record->semester;  // Asumsi jumlah SKS per semester
             $totalSKS += $record->semester;
         }
